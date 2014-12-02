@@ -53,7 +53,17 @@ public class Stages {
 		String needleAsString = "" + needlePosition;
 		String[] values3 = {token, needleAsString};
 		JSONObject result = sendRequest(key3, values3, "validateedle");
-		
+		JSONObject prefixJSONObject = sendRequest(key1, values1, "prefix");
+		String prefix = prefixJSONObject.getString("prefix");
+		JSONArray prefixList = needleInAHaystack.getJSONArray("array");
+		ArrayList<String> listOfWords = new ArrayList<String>();
+		for(int i = 0; i < prefixList.length(); i++) {
+			listOfWords.add((String) prefixList.get(i));
+		}
+		ArrayList<String> newWordList = findWordWithPrefix(prefix, listOfWords);
+		String[] key4 = {"token" , "array"};
+		sendRequestArray(key4, token, newWordList, "validateprefix");
+
 
 	}
 
@@ -126,6 +136,74 @@ public class Stages {
 			if(needle.equals(fields.get(i))) return i;
 		}
 		return -1;
+	}
+	
+	private static ArrayList findWordWithPrefix(String prefix, ArrayList<String> listOfWords){
+		for(int i = 0; i<listOfWords.size(); i++){
+			String currentWord = listOfWords.get(i);
+			String currentWordPrefix = "";
+			for(int j = 0; j < prefix.length(); j++){
+				char ch = currentWord.charAt(j);
+				currentWordPrefix += ch;
+			}
+			if(prefix.equals(currentWordPrefix)) listOfWords.remove(i);
+		}
+		return listOfWords;
+	}
+	
+	public static JSONObject sendRequestArray(String [] keys, String token, ArrayList <String> array, String urlEnding) throws IOException {
+		String url= "http://challenge.code2040.org/api/" + urlEnding;
+
+		URL object = new URL(url);
+
+		HttpURLConnection con = (HttpURLConnection) object.openConnection();
+
+		con.setDoOutput(true);
+
+		con.setDoInput(true);
+
+		con.setRequestProperty("Content-Type", "application/json; charset=utf8");
+		con.setRequestProperty("Accept", "application/json");
+		con.setRequestMethod("POST");		
+		con.connect();
+
+		JSONObject cred = new JSONObject();
+		cred.put(keys[0], token);
+		cred.put(keys[1], array);
+		
+
+		OutputStream os = con.getOutputStream();
+		os.write(cred.toString().getBytes("UTF-8"));
+		os.close();
+
+		StringBuilder sb = new StringBuilder();  
+
+		int HttpResult = con.getResponseCode(); 
+
+		if(HttpResult == HttpURLConnection.HTTP_OK){
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));  
+
+			String line = null;  
+
+			while ((line = br.readLine()) != null) {  
+				sb.append(line + "\n");  
+			}  
+
+			br.close();  
+
+			String str = ""+sb.toString(); 
+			JSONObject result = new JSONObject(str);
+
+			return result;
+			// Take this string and then convert it to JSON object
+			//JSONObejct
+
+		}else{
+			System.out.println(con.getResponseMessage());  
+			return null;
+		} 
+
 	}
 
 
