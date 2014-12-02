@@ -37,13 +37,16 @@ public class Stages {
 		JSONObject strToReversJSON = sendRequest(key1, values1, "getstring");
 		String strToReverse = strToReversJSON.getString("result");
 
-		String token1 = reverseString(strToReverse);
+		String finishedReversedStr = reverseString(strToReverse);
 		String[] key2 = {"token", "string"};
-		String[] values2 = {token, token1};
+		String[] values2 = {token, finishedReversedStr};
 		JSONObject validateString = sendRequest(key2, values2, "validatestring");
 		JSONObject needleInAHaystack = sendRequest(key1, values1, "haystack");
-		String needle = needleInAHaystack.getString("needle");
-		JSONArray haystack = needleInAHaystack.getJSONArray("haystack");
+		
+		JSONObject needleHayJSON = needleInAHaystack.getJSONObject("result");
+		
+		String needle = needleHayJSON.getString("needle");
+		JSONArray haystack = needleHayJSON.getJSONArray("haystack");
 		ArrayList<String> fields = new ArrayList<String>();
 		for(int i = 0; i < haystack.length(); i++) {
 			fields.add((String) haystack.get(i));
@@ -52,10 +55,10 @@ public class Stages {
 		String[] key3 = {"token", "needle"};
 		String needleAsString = "" + needlePosition;
 		String[] values3 = {token, needleAsString};
-		JSONObject result = sendRequest(key3, values3, "validateedle");
+		JSONObject result = sendRequest(key3, values3, "validateneedle");
 		JSONObject prefixJSONObject = sendRequest(key1, values1, "prefix");
 		String prefix = prefixJSONObject.getString("prefix");
-		JSONArray prefixList = needleInAHaystack.getJSONArray("array");
+		JSONArray prefixList = needleHayJSON.getJSONArray("array");
 		ArrayList<String> listOfWords = new ArrayList<String>();
 		for(int i = 0; i < prefixList.length(); i++) {
 			listOfWords.add((String) prefixList.get(i));
