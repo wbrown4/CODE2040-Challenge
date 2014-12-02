@@ -7,7 +7,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -38,8 +40,19 @@ public class Stages {
 		String token1 = reverseString(strToReverse);
 		String[] key2 = {"token", "string"};
 		String[] values2 = {token, token1};
-		JSONObject needleInAHaystack = sendRequest(key2, values2, "validatestring");
-		
+		JSONObject validateString = sendRequest(key2, values2, "validatestring");
+		JSONObject needleInAHaystack = sendRequest(key1, values1, "haystack");
+		String needle = needleInAHaystack.getString("needle");
+		JSONArray haystack = needleInAHaystack.getJSONArray("haystack");
+		ArrayList<String> fields = new ArrayList<String>();
+		for(int i = 0; i < haystack.length(); i++) {
+			fields.add((String) haystack.get(i));
+		}
+		int needlePosition = findNeedleInAHaystack(needle, fields);
+		String[] key3 = {"token", "needle"};
+		String needleAsString = "" + needlePosition;
+		String[] values3 = {token, needleAsString};
+		JSONObject result = sendRequest(key3, values3, "validateedle");
 		
 
 	}
@@ -106,6 +119,13 @@ public class Stages {
 			reversedString += ch;
 		}
 		return reversedString;
+	}
+	
+	private static int findNeedleInAHaystack(String needle, ArrayList<String> fields){
+		for(int i = 0; i < fields.size(); i++){
+			if(needle.equals(fields.get(i))) return i;
+		}
+		return -1;
 	}
 
 
