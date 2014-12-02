@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 
 
-public class Stage1 {
+public class Stages {
 	
 	//keys = {email, github}
 	// values = {asdfasd@gmail.com, http:///sdfasfd}
