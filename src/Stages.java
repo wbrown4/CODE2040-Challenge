@@ -56,9 +56,12 @@ public class Stages {
 		String needleAsString = "" + needlePosition;
 		String[] values3 = {token, needleAsString};
 		JSONObject result = sendRequest(key3, values3, "validateneedle");
-		JSONObject prefixJSONObject = sendRequest(key1, values1, "prefix");
+		JSONObject prefixRequest = sendRequest(key1, values1, "prefix");
+		
+		JSONObject prefixJSONObject = prefixRequest.getJSONObject("result");
 		String prefix = prefixJSONObject.getString("prefix");
-		JSONArray prefixList = needleHayJSON.getJSONArray("array");
+		JSONArray prefixList = prefixJSONObject.getJSONArray("array");
+		
 		ArrayList<String> listOfWords = new ArrayList<String>();
 		for(int i = 0; i < prefixList.length(); i++) {
 			listOfWords.add((String) prefixList.get(i));
