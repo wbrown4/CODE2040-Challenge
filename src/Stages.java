@@ -66,9 +66,9 @@ public class Stages {
 		for(int i = 0; i < prefixList.length(); i++) {
 			listOfWords.add((String) prefixList.get(i));
 		}
-		ArrayList<String> newWordList = findWordWithPrefix(prefix, listOfWords);
+		findWordWithPrefix(prefix, listOfWords);
 		String[] key4 = {"token" , "array"};
-		sendRequestArray(key4, token, newWordList, "validateprefix");
+	    JSONObject theLastOne =	sendRequestArray(key4, token, listOfWords, "validateprefix");
 
 
 	}
@@ -144,7 +144,7 @@ public class Stages {
 		return -1;
 	}
 	
-	private static ArrayList findWordWithPrefix(String prefix, ArrayList<String> listOfWords){
+	private static void findWordWithPrefix(String prefix, ArrayList<String> listOfWords){
 		for(int i = 0; i<listOfWords.size(); i++){
 			String currentWord = listOfWords.get(i);
 			String currentWordPrefix = "";
@@ -154,7 +154,6 @@ public class Stages {
 			}
 			if(prefix.equals(currentWordPrefix)) listOfWords.remove(i);
 		}
-		return listOfWords;
 	}
 	
 	public static JSONObject sendRequestArray(String [] keys, String token, ArrayList <String> array, String urlEnding) throws IOException {
