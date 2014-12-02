@@ -26,7 +26,7 @@ public class Stages {
 	public static void main(String [] args) throws IOException{
 		// Gets original token DFAD$5435
 		String[] keys = {"email", "github"};
-		String[] values = {"wbrown4@stanford.edu", "https://github.com/wbrown4/CODE2040-Challenge"};
+		String[] values = {"scotty34472@gmail.com", "https://github.com/wbrown4/CODE2040-Challenge"};
 		JSONObject tokenJSON = sendRequest(keys, values, "register");
 		String token = tokenJSON.getString("result");
 
